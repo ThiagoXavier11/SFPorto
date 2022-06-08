@@ -38,9 +38,9 @@ node {
 			
 			// need to pull out assigned username
 			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:push -u thiago.xaviercosta@portoseguro.com.br.bu"
+				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest package.xml"
 			}else{
-			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:push -u thiago.xaviercosta@portoseguro.com.br.bu"
+			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest package.xml"
 			}
 			  
             printf rmsg
@@ -48,4 +48,3 @@ node {
             println(rmsg)
         }
     }
-}
