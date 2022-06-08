@@ -4,5 +4,13 @@
 		<members>BatchTeste</members>
 		<name>ApexClass</name>
 	</types>
+	<types>
+		<members>Account.POC__c</members>
+		<name>CustomField</name>
+	</types>
+	<types>
+		<members>Account-Account Layout</members>
+		<name>Layout</name>
+	</types>
 	<version>53.0</version>
 </Package>
