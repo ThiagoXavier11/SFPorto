@@ -3,5 +3,10 @@
 	<types>
 		<members>BatchTeste</members>
 		<name>ApexClass</name>
-	</types>	
+	</types>
+	<types>
+		<members>Account.POC__c</members>
+		<name>CustomField</name>
+	</types>
+	<version>53.0</version>
 </Package>
