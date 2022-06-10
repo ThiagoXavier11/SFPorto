@@ -45,19 +45,19 @@ node {
 			}
 			
 			// need to pull out assigned username
-			/*if (isUnix()) {
+			if (isUnix()) {
 				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
 			}else{
 			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-			}*/
+			}
 
             // Rollback pós-deploy
 
-            /*if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            if (isUnix()) {
+				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
 			}else{
-			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-			}*/
+			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+			}
 			  
             printf rmsg
             println('Hello from a Job DSL script!')
