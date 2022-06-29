@@ -52,7 +52,7 @@ node {
     // Etapa de implantação no ambiente de Build
     
     stage('Deploy-Build'){
-        if (scmVars.GIT_BRANCH.contains('feature'){
+        if (scmVars.GIT_BRANCH.contains('feature')){
             withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
                 if (isUnix()){
                 rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_BU} --username ${HUB_ORG_BU} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST_BU}"
