@@ -65,10 +65,9 @@ node {
                 
                 // Rollback pré-deploy
                 
-                File filePre = new File('C:/ProgramData/Jenkins/.jenkins/workspace/Salesforce_/manifest/destructiveChangesPre.xml')
-                String textoPre  = filePre.getText("<types>")
+                String fileContentPre = new File('C:/ProgramData/Jenkins/.jenkins/workspace/Salesforce_/manifest/destructiveChangesPre.xml').text
                 
-                if (textoPre){
+                if (fileContentPre.contains('<types>')){
                     if (isUnix()){
                     rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
                     }else{
@@ -84,10 +83,9 @@ node {
 
                 // Rollback pós-deploy
                 
-                File filePos = new File('C:/ProgramData/Jenkins/.jenkins/workspace/Salesforce_/manifest/destructiveChangesPost.xml')
-                String textoPos  = filePos.getText("<types>")
+                String fileContentPos = new File('C:/ProgramData/Jenkins/.jenkins/workspace/Salesforce_/manifest/destructiveChangesPost.xml').text
 
-                if(textoPos){
+                if(fileContentPos.contains('<types>')){
                     if (isUnix()){
                         rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
                     }else{
