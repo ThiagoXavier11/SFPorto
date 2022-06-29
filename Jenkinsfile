@@ -45,8 +45,8 @@ node {
 
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
-        checkout scm
-        echo scm.GIT_BRANCH
+        scmVars = checkout scm
+        echo scmVars.GIT_BRANCH
     }
     
     // Etapa de implantação no ambiente de Build
