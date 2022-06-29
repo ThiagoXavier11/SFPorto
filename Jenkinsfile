@@ -65,7 +65,7 @@ node {
                 
                 // Rollback pré-deploy
                 
-                File filePre = new File('manifest/destructiveChangesPre.xml')
+                File filePre = new File('C:/ProgramData/Jenkins/.jenkins/workspace/Salesforce_/manifest/destructiveChangesPre.xml')
                 String textoPre  = filePre.getText("<types>")
                 
                 if (textoPre){
@@ -84,7 +84,7 @@ node {
 
                 // Rollback pós-deploy
                 
-                File filePos = new File('manifest/destructiveChangesPost.xml')
+                File filePos = new File('C:/ProgramData/Jenkins/.jenkins/workspace/Salesforce_/manifest/destructiveChangesPost.xml')
                 String textoPos  = filePos.getText("<types>")
 
                 if(textoPos){
