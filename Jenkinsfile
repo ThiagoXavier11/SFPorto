@@ -64,8 +64,8 @@ node {
                 
                 // Rollback pré-deploy
                 
-                File file = new File('manifest/destructiveChangesPre.xml')
-                String textoPre  = file.getText("<types>")
+                File filePre = new File('manifest/destructiveChangesPre.xml')
+                String textoPre  = filePre.getText("<types>")
                 
                 if (textoPre){
                     if (isUnix()){
@@ -83,8 +83,8 @@ node {
 
                 // Rollback pós-deploy
                 
-                File file = new File('manifest/destructiveChangesPost.xml')
-                String textoPos  = file.getText("<types>")
+                File filePos = new File('manifest/destructiveChangesPost.xml')
+                String textoPos  = filePos.getText("<types>")
 
                 if(textoPos){
                     if (isUnix()){
