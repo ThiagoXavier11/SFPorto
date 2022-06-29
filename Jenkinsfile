@@ -46,7 +46,6 @@ node {
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
         scmVars = checkout scm
-        echo scmVars.GIT_BRANCH
     }
     
     // Etapa de implantação no ambiente de Build
@@ -65,14 +64,10 @@ node {
                 
                 // Rollback pré-deploy
                 
-                String fileContentPre = new File('C:/ProgramData/Jenkins/.jenkins/workspace/Salesforce_/manifest/destructiveChangesPre.xml').text
-                
-                if (fileContentPre.contains('<types>')){
-                    if (isUnix()){
-                    rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                    }else{
-                   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                    }
+                if (isUnix()){
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+                }else{
+               rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
                 }                
                 
                 if (isUnix()){
@@ -83,14 +78,10 @@ node {
 
                 // Rollback pós-deploy
                 
-                String fileContentPos = new File('C:/ProgramData/Jenkins/.jenkins/workspace/Salesforce_/manifest/destructiveChangesPost.xml').text
-
-                if(fileContentPos.contains('<types>')){
-                    if (isUnix()){
-                        rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                    }else{
-                       rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                    }
+                if (isUnix()){
+                    rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+                }else{
+                   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
                 }
             }
         }    
