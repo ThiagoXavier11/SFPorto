@@ -51,7 +51,7 @@ node {
     // Etapa de implantação no ambiente de Build
     
     
-    if (scmVars.GIT_BRANCH.contains('feature')){
+    if (scmVars.GIT_BRANCH.contains('featura')){
         stage('Deploy-Build'){
             withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
                 if (isUnix()){
