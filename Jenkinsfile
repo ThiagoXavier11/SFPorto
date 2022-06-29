@@ -51,10 +51,7 @@ node {
     // Etapa de implantação no ambiente de Build
     
     stage('Deploy-Build'){
-        when{
-            branch 'feature/*'
-        }
-        steps{
+        if (branch == 'feature/*'){
             withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
                 if (isUnix()){
                 rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_BU} --username ${HUB_ORG_BU} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST_BU}"
@@ -67,8 +64,8 @@ node {
                 
                 // Rollback pré-deploy
                 
-                File filePre = new File('manifest/destructiveChangesPre.xml')
-                String textoPre  = filePre.getText("<types>")
+                File file = new File('manifest/destructiveChangesPre.xml')
+                String textoPre  = file.getText("<types>")
                 
                 if (textoPre){
                     if (isUnix()){
@@ -86,8 +83,8 @@ node {
 
                 // Rollback pós-deploy
                 
-                File filePos = new File('manifest/destructiveChangesPost.xml')
-                String textoPos  = filePos.getText("<types>")
+                File file = new File('manifest/destructiveChangesPost.xml')
+                String textoPos  = file.getText("<types>")
 
                 if(textoPos){
                     if (isUnix()){
@@ -97,7 +94,6 @@ node {
                     }
                 }
             }
-        }
-    
+        }    
     }
 }
