@@ -74,7 +74,7 @@ node {
 
         stage('Deploy'){
             
-                rmsg = sh returnStatus: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --loglevel info -u thiago.xaviercosta@portoseguro.com.br.bu"
+                rmsg = bat returnStatus: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --loglevel info -u thiago.xaviercosta@portoseguro.com.br.bu"
                 println rmsg
         }
 
