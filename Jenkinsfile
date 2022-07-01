@@ -75,7 +75,7 @@ node {
         stage('Deploy'){
             
                 rmsg = bat returnStatus: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                println "rmsg = ${output}"
+                println "rmsg = ${rmsg}"
         }
 
         // Rollback pós-deploy
