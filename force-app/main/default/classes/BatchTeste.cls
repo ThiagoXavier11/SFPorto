@@ -4,8 +4,5 @@ public with sharing class BatchTeste {
         //Teste 2
         //Teste 3
         //Teste 4.1
-
-        List<Account> v1 = [select id from account where estado__c = 'SP'];
-        public teste = v1;
     }
 }
