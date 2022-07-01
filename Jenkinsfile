@@ -77,7 +77,6 @@ node {
                     rmsg = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"    
                 }catch (exc){
                     echo 'Something failed!'
-                    throw
                 }
             
                 //rmsg = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
