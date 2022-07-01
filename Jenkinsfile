@@ -73,15 +73,16 @@ node {
         }
 
         stage('Deploy'){
-            /*if (isUnix()){
+            if (isUnix()){
                 rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                error rmsg + 'Aqui'
-            }*/
+                rmsg = rmsg.readLines().drop(1).join("")
 
-            rmsg = command "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-            echo rmsg
+                def jsonSlurper = new JsonSlurperClassic()
+                def response = jsonSlurper.parseText(rmsg)
+                echo response
+            }
         }
 
         // Rollback pós-deploy
