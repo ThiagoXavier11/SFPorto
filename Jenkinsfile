@@ -77,7 +77,7 @@ node {
                 rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                error rmsg + "Aqui"
+                error rmsg + 'Aqui'
             }
         }
 
