@@ -82,7 +82,7 @@ node {
             echo rmsg + " Aqui1"
             println "rmsg = ${rmsg}" + " Aqui2"
             //if (rmsg != 0) { error 'A tentativa de Deploy com a Org falhou!' }
-            if (rmsg == 0){
+            if (rmsg == null){
             echo "Passou aqui1"
             println "rmsg = ${rmsg}" + " Passou Aqui2"
             }
