@@ -5,6 +5,7 @@ public with sharing class BatchTeste {
         //Teste 3
         //Teste 4.1
 
-        select id from account where estado__c = 'SP';
+        List<Account> v1 = [select id from account where estado__c = 'SP'];
+        public teste = v1;
     }
 }
