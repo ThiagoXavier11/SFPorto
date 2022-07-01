@@ -81,7 +81,6 @@ node {
             println 'Passou aqui!'
             if (rmsg == 0){echo 'Deu certo'}
             else{echo 'Deu errado'}
-            echo rmsg
         }
 
         // Rollback pós-deploy
