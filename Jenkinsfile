@@ -79,8 +79,7 @@ node {
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
                 rmsg = rmsg.readLines().drop(1).join("")
 
-                def jsonSlurper = new JsonSlurperClassic()
-                def response = jsonSlurper.parseText(rmsg)
+                def response = rmsg.getText()
                 echo response
             }
         }
