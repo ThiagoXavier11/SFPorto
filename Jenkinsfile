@@ -43,16 +43,15 @@ node {
     
     // Checkout no repositório
 
-    stage('checkout source') {
-        // when running in multi-branch job, one must issue this command
+    stage('Checkout no Repositório') {
         scmVars = checkout scm
     }
     
     // Etapa de implantação no ambiente de Build
     
     
-    if (scmVars.GIT_BRANCH.contains('featura')){
-        stage('Deploy-Build'){
+    if (scmVars.GIT_BRANCH.contains('feature')){
+        stage('Autenticação'){
             withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
                 if (isUnix()){
                 rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_BU} --username ${HUB_ORG_BU} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST_BU}"
@@ -60,34 +59,35 @@ node {
                      rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_BU} --username ${HUB_ORG_BU} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST_BU}"
                 }
                 if (rc != 0) { error 'hub org authorization failed' }
-
-                println rc
-                
-                // Rollback pré-deploy
-                
-                if (isUnix()){
-                    rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                }else{
-                    rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                }                
-                
-                if (isUnix()){
-                    rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                }else{
-                    rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                }
-
-                // Rollback pós-deploy
-                
-                if (isUnix()){
-                    rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                }else{
-                    rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                }
             }
-        }       
-    }
-    else{
-        echo 'Passei aqui!'
+        }
+    
+        // Rollback pré-deploy
+
+        stage('Rollback Pré-Implantação'){
+            if (isUnix()){
+            rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }              
+        }
+
+        stage('Deploy'){
+            if (isUnix()){
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }
+        }
+
+        // Rollback pós-deploy
+
+        stage('Rollback Pós-Implantação'){
+            if (isUnix()){
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }
+        }                    
     }
 }
