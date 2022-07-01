@@ -58,7 +58,7 @@ node {
                 }else{
                      rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_BU} --username ${HUB_ORG_BU} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST_BU}"
                 }
-                if (rc != 0) { error 'hub org authorization failed' }
+                if (rc != 0) { error 'A tentativa de autorização com a Org falhou!' }
             }
         }
     
@@ -73,9 +73,11 @@ node {
         }
 
         stage('Deploy'){
-            
-                rmsg = bat returnStatus: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                println rmsg + "Deu certo"
+            if (isUnix()){
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }
         }
 
         // Rollback pós-deploy
@@ -99,7 +101,7 @@ node {
                 }else{
                      rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_QA} --username ${HUB_ORG_QA} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST_QA}"
                 }
-                if (rc != 0) { error 'hub org authorization failed' }
+                if (rc != 0) { error 'A tentativa de autorização com a Org falhou!' }
             }
         }
     
@@ -142,7 +144,7 @@ node {
                 }else{
                      rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_UAT} --username ${HUB_ORG_UAT} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST_UAT}"
                 }
-                if (rc != 0) { error 'hub org authorization failed' }
+                if (rc != 0) { error 'A tentativa de autorização com a Org falhou!' }
             }
         }
     
@@ -173,5 +175,88 @@ node {
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.uat"
             }
         }                    
+    }
+    
+    //Etapa de implantação nos ambientes de Stage e Produção
+    
+    if (scmVars.GIT_BRANCH.contains('master')){
+	stage('Autenticação em Stage'){
+		withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
+			if (isUnix()){
+			rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_STG} --username ${HUB_ORG_STG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST_STG}"
+			}else{
+				 rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_STG} --username ${HUB_ORG_STG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST_STG}"
+			}
+			if (rc != 0) { error 'A tentativa de autorização com a Org falhou!' }
+		}
+	}
+
+	// Rollback pré-deploy
+
+	stage('Rollback Pré-Implantação'){
+		if (isUnix()){
+		rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.stg"
+		}else{
+			rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.stg"
+		}              
+	}
+
+	stage('Deploy'){
+		if (isUnix()){
+			rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.stg"
+		}else{
+			rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.stg"
+		}
+	}
+
+	// Rollback pós-deploy
+
+	stage('Rollback Pós-Implantação'){
+		if (isUnix()){
+			rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.stg"
+		}else{
+			rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.stg"
+		}
+	}
+	if (rmsg == 0){
+		stage('Autenticação em Produção'){
+		withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
+			if (isUnix()){
+			rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+			}else{
+				 rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+			}
+			if (rc != 0) { error 'A tentativa de autorização com a Org falhou!' }
+		}
+		}
+
+		// Rollback pré-deploy
+
+		stage('Rollback Pré-Implantação'){
+			if (isUnix()){
+			rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br"
+			}else{
+				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br"
+			}              
+		}
+
+		stage('Deploy'){
+			if (isUnix()){
+				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br"
+			}else{
+				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br"
+			}
+		}
+
+		// Rollback pós-deploy
+
+		stage('Rollback Pós-Implantação'){
+			if (isUnix()){
+				rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br"
+			}else{
+				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br"
+			}
+		}
+	}
     }
 }
