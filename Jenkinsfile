@@ -2,6 +2,12 @@
 import groovy.json.JsonSlurperClassic
 node {
 
+    environment {
+        LC_ALL = 'pt_BR.UTF-8'
+        LANG    = 'pt_BR.UTF-8'
+        LANGUAGE = 'pt_BR.UTF-8'
+    }
+
     // ID's dos certificados utilizados para autenticação com JWT
     
     def JWT_KEY_CRED_ID = env.JWT_CRED_ID_DH
