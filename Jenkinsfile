@@ -79,7 +79,7 @@ node {
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --verbose -u thiago.xaviercosta@portoseguro.com.br.bu"
             }
             println 'Passou aqui!'
-            if (rmsg == 0){echo 'Deu certo'}
+            if (rmsg.contains('Error')){echo 'Deu certo'}
             else{echo 'Deu errado'}
             println rmsg
         }
