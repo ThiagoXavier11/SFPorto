@@ -73,11 +73,9 @@ node {
         }
 
         stage('Deploy'){
-            if (isUnix()){
-                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-            }else{
-                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --verbose -u thiago.xaviercosta@portoseguro.com.br.bu"
-            }
+            
+                rmsg = command "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            
             println 'Passou aqui!'
             if (rmsg.contains('Error')){echo 'Deu certo'}
             else{echo 'Deu errado'}
