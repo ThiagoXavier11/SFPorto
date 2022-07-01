@@ -78,6 +78,7 @@ node {
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }
+            if (rc != 0) { error 'A tentativa de Deploy com a Org falhou!' }
         }
 
         // Rollback pós-deploy
