@@ -77,7 +77,7 @@ node {
                 rmsg = command "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             
             if (rmsg != 0) {echo 'ERRO'}
-            echo rmsg
+            //echo rmsg
         }
 
         // Rollback pós-deploy
