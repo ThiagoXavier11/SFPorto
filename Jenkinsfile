@@ -78,6 +78,8 @@ node {
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }
+            if (rmsg == 0){echo 'Deu certo'}
+            else{echo 'Deu errado'}
         }
 
         // Rollback pós-deploy
@@ -87,6 +89,92 @@ node {
                 rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            }
+        }                    
+    }
+
+    //Etapa de implantação no ambiente de QA
+
+    if (scmVars.GIT_BRANCH.contains('develop')){
+        stage('Autenticação'){
+            withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
+                if (isUnix()){
+                rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_QA} --username ${HUB_ORG_QA} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST_QA}"
+                }else{
+                     rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_QA} --username ${HUB_ORG_QA} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST_QA}"
+                }
+                if (rc != 0) { error 'hub org authorization failed' }
+            }
+        }
+    
+        // Rollback pré-deploy
+
+        stage('Rollback Pré-Implantação'){
+            if (isUnix()){
+            rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.qa"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.qa"
+            }              
+        }
+
+        stage('Deploy'){
+            if (isUnix()){
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.qa"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.qa"
+            }
+        }
+
+        // Rollback pós-deploy
+
+        stage('Rollback Pós-Implantação'){
+            if (isUnix()){
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.qa"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.qa"
+            }
+        }                    
+    }
+
+    // Etapa de implantação no ambiente de UAT
+
+    if (scmVars.GIT_BRANCH.contains('release')){
+        stage('Autenticação'){
+            withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
+                if (isUnix()){
+                rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_UAT} --username ${HUB_ORG_UAT} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST_UAT}"
+                }else{
+                     rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY_UAT} --username ${HUB_ORG_UAT} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST_UAT}"
+                }
+                if (rc != 0) { error 'hub org authorization failed' }
+            }
+        }
+    
+        // Rollback pré-deploy
+
+        stage('Rollback Pré-Implantação'){
+            if (isUnix()){
+            rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.uat"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --predestructivechanges manifest/destructiveChangesPre.xml -u thiago.xaviercosta@portoseguro.com.br.uat"
+            }              
+        }
+
+        stage('Deploy'){
+            if (isUnix()){
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.uat"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.uat"
+            }
+        }
+
+        // Rollback pós-deploy
+
+        stage('Rollback Pós-Implantação'){
+            if (isUnix()){
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.uat"
+            }else{
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.uat"
             }
         }                    
     }
