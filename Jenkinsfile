@@ -75,7 +75,7 @@ node {
         stage('Deploy'){
             
                 rmsg = command "${toolbelt} force:source:deploy --manifest manifest/package.xml --loglevel info -u thiago.xaviercosta@portoseguro.com.br.bu"
-            
+                println rmsg
         }
 
         // Rollback pós-deploy
