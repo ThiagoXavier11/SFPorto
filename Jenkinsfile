@@ -77,14 +77,7 @@ node {
                 rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                echo rmsg + " Aqui passou"
-            }
-            echo rmsg + " Aqui1"
-            println "rmsg = ${rmsg}" + " Aqui2"
-            //if (rmsg != 0) { error 'A tentativa de Deploy com a Org falhou!' }
-            if (rmsg == ""){
-            echo "Passou aqui1"
-            println "rmsg = ${rmsg}" + " Passou Aqui2"
+                error rmsg + "Aqui"
             }
         }
 
