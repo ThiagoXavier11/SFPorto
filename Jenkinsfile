@@ -92,14 +92,7 @@ node {
         } 
 
         if (rmsg == 0){
-            stage('Deploy'){
-            if (isUnix()){
-                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-            }else{
-                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-            }
-            if (rc != 0) { error 'A tentativa de Deploy com a Org falhou!' }
-        }
+        echo "Passou aqui"
         }                   
     }
 
