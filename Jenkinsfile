@@ -76,11 +76,12 @@ node {
             if (isUnix()){
                 rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }else{
-                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --verbose -u thiago.xaviercosta@portoseguro.com.br.bu"
             }
             println 'Passou aqui!'
             if (rmsg == 0){echo 'Deu certo'}
             else{echo 'Deu errado'}
+            println rmsg
         }
 
         // Rollback pós-deploy
