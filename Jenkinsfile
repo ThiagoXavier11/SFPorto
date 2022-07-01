@@ -74,9 +74,9 @@ node {
 
         stage('Deploy'){
             if (isUnix()){
-                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+                rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -l RunLocalTests -u thiago.xaviercosta@portoseguro.com.br.bu"
             }else{
-                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+                rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -l RunLocalTests -u thiago.xaviercosta@portoseguro.com.br.bu"
             }
         }
 
