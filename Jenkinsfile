@@ -73,12 +73,15 @@ node {
         }
 
         stage('Deploy'){
-            if (isUnix()){
+            /*if (isUnix()){
                 rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
                 error rmsg + 'Aqui'
-            }
+            }*/
+
+            rmsg = command "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
+            echo rmsg
         }
 
         // Rollback pós-deploy
