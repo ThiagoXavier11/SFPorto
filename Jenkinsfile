@@ -78,7 +78,10 @@ node {
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }
-            if (rc != 0) { error 'A tentativa de Deploy com a Org falhou!' }
+            if (rmsg != 0) { error 'A tentativa de Deploy com a Org falhou!' }
+            if (rmsg == 0){
+            echo "Passou aqui"
+            }
         }
 
         // Rollback pós-deploy
@@ -89,11 +92,7 @@ node {
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml --postdestructivechanges manifest/destructiveChangesPost.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }
-        } 
-
-        if (rmsg == 0){
-        echo "Passou aqui"
-        }                   
+        }                    
     }
 
     //Etapa de implantação no ambiente de QA
