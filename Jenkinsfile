@@ -79,7 +79,6 @@ node {
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
                 input{
                     message "Continuar?"
-                    ok "Yes"
                 }
             }
         }
