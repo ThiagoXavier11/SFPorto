@@ -77,9 +77,10 @@ node {
                 rmsg = sh returnStdout: true, script: "${toolbelt} force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
             }else{
                 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:deploy --manifest manifest/package.xml -u thiago.xaviercosta@portoseguro.com.br.bu"
-                input{
-                    message: 'Continuar?'
-                }
+                def userInput = input(
+                    id: 'userInput', message: 'Procedimentos Manuais', parameters: [
+                    [$class: 'BooleanParameterDefinition', defaultValue: false, description: '', name: 'Procedimentos Realizados?']
+                ])
             }
         }
 
