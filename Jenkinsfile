@@ -253,7 +253,7 @@ node {
     
     //Etapa de implantação nos ambientes de Stage e Produção
     
-    if (scmVars.GIT_BRANCH.contains('master')){
+    if (scmVars.GIT_BRANCH.contains('main')){
 	stage('Autenticação em Stage'){
 		withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]){
 			if (isUnix()){
