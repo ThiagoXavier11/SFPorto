@@ -1,5 +1,5 @@
 public with sharing class BatchTeste {
     public BatchTeste() {
-        //Teste completo
+        //Teste completo 2
     }
 }
